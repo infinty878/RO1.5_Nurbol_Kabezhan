@@ -158,3 +158,99 @@ CREATE TABLE IF NOT EXISTS boarding_passes (
     CONSTRAINT fk_boarding_passes_seat
         FOREIGN KEY (seat_id) REFERENCES seats(seat_id)
 );
+
+INSERT INTO country (country_name) VALUES
+    ('United States'),
+    ('United Kingdom');
+
+INSERT INTO city (city_name) VALUES
+    ('New York'),
+    ('Los Angeles'),
+    ('London'),
+    ('Chicago');
+
+INSERT INTO airports (iata_code, airport_name, city_id, country_id) VALUES
+    ('JFK', 'John F. Kennedy International Airport', 1, 1),
+    ('LAX', 'Los Angeles International Airport', 2, 1),
+    ('LHR', 'London Heathrow Airport', 3, 2),
+    ('ORD', 'O\'Hare International Airport', 4, 1);
+
+INSERT INTO flights (flight_number, dep_airport_id, arr_airport_id) VALUES
+    ('AA100', 1, 2),
+    ('BA200', 3, 1),
+    ('UA300', 4, 2);
+
+INSERT INTO aircraft_models (manufacturer, model_name, capacity) VALUES
+    ('Boeing', '737-800', 189),
+    ('Airbus', 'A320', 180);
+
+INSERT INTO aircrafts (model_id, tail_number) VALUES
+    (1, 'N12345'),
+    (2, 'G-EUAB');
+
+INSERT INTO seats (aircraft_id, seat_number, seat_class) VALUES
+    (1, '1A', 'Business'),
+    (1, '25B', 'Economy'),
+    (2, '2A', 'Business'),
+    (2, '30C', 'Economy');
+
+INSERT INTO economy_seats (economy_id) VALUES
+    (2),
+    (4);
+
+INSERT INTO business_seats (business_id) VALUES
+    (1),
+    (3);
+
+INSERT INTO flight_instances (flight_id, aircraft_id, departure_time, arrival_time, status) VALUES
+    (1, 1, '2026-03-15 08:00:00', '2026-03-15 11:30:00', 'Scheduled'),
+    (2, 2, '2026-04-01 14:00:00', '2026-04-01 22:00:00', 'Scheduled'),
+    (3, 1, '2026-05-10 06:00:00', '2026-05-10 08:30:00', 'Departed');
+
+INSERT INTO roles (role_name) VALUES
+    ('Pilot'),
+    ('Flight Attendant');
+
+INSERT INTO employees (first_name, last_name, role_id, number, email, iin) VALUES
+    ('John', 'Smith', 1, 1001, 'john.smith@airline.com', 900101350001),
+    ('Jane', 'Doe', 2, 1002, 'jane.doe@airline.com', 950515450002),
+    ('Robert', 'Brown', 1, 1003, 'robert.brown@airline.com', 880720350003);
+
+INSERT INTO flight_crew (instance_id, employee_id, assignment_role) VALUES
+    (1, 1, 'Captain'),
+    (1, 2, 'Lead Attendant'),
+    (2, 3, 'Captain');
+
+INSERT INTO passengers (first_name, last_name, passport_num, email) VALUES
+    ('Alice', 'Johnson', 'US12345678', 'alice.j@email.com'),
+    ('Bob', 'Williams', 'UK87654321', 'bob.w@email.com');
+
+INSERT INTO bookings (passenger_id, booking_date, amount) VALUES
+    (1, '2026-02-20 10:00:00', 450.00),
+    (2, '2026-03-01 15:30:00', 1200.50);
+
+INSERT INTO tickets (booking_id, instance_id, fare) VALUES
+    (1, 1, 450.00),
+    (2, 2, 1200.50);
+
+INSERT INTO boarding_passes (ticket_id, seat_id) VALUES
+    (1, 2),
+    (2, 3);
+
+SELECT * FROM country;
+SELECT * FROM city;
+SELECT * FROM airports;
+SELECT * FROM flights;
+SELECT * FROM aircraft_models;
+SELECT * FROM aircrafts;
+SELECT * FROM seats;
+SELECT * FROM economy_seats;
+SELECT * FROM business_seats;
+SELECT * FROM flight_instances;
+SELECT * FROM roles;
+SELECT * FROM employees;
+SELECT * FROM flight_crew;
+SELECT * FROM passengers;
+SELECT * FROM bookings;
+SELECT * FROM tickets;
+SELECT * FROM boarding_passes;
