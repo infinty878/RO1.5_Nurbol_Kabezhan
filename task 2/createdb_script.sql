@@ -1,18 +1,18 @@
 DROP SCHEMA IF EXISTS airline CASCADE;
-CREATE SCHEMA airline;
+CREATE SCHEMA IF NOT EXISTS airline;
 SET search_path TO airline;
 
-CREATE TABLE airline.country (
+CREATE TABLE IF NOT EXISTS airline.country (
     country_id   SERIAL      PRIMARY KEY,
     country_name VARCHAR(60) NOT NULL UNIQUE
 );
 
-CREATE TABLE airline.city (
+CREATE TABLE IF NOT EXISTS airline.city (
     city_id   SERIAL      PRIMARY KEY,
     city_name VARCHAR(60) NOT NULL
 );
 
-CREATE TABLE airline.airports (
+CREATE TABLE IF NOT EXISTS airline.airports (
     airport_id   SERIAL       PRIMARY KEY,
     iata_code    CHAR(3)      NOT NULL UNIQUE,
     airport_name VARCHAR(100) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE airline.airports (
     CONSTRAINT fk_airports_country FOREIGN KEY (country_id) REFERENCES airline.country(country_id)
 );
 
-CREATE TABLE airline.flights (
+CREATE TABLE IF NOT EXISTS airline.flights (
     flight_id      SERIAL      PRIMARY KEY,
     flight_number  VARCHAR(20) NOT NULL UNIQUE,
     dep_airport_id INT         NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE airline.flights (
     CONSTRAINT fk_flights_arr FOREIGN KEY (arr_airport_id) REFERENCES airline.airports(airport_id)
 );
 
-CREATE TABLE airline.aircraft_models (
+CREATE TABLE IF NOT EXISTS airline.aircraft_models (
     model_id     SERIAL      PRIMARY KEY,
     manufacturer VARCHAR(50) NOT NULL,
     model_name   VARCHAR(50) NOT NULL,
@@ -40,14 +40,14 @@ CREATE TABLE airline.aircraft_models (
     CONSTRAINT chk_aircraft_models_capacity CHECK (capacity > 0)
 );
 
-CREATE TABLE airline.aircrafts (
+CREATE TABLE IF NOT EXISTS airline.aircrafts (
     aircraft_id INT         GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     model_id    INT         NOT NULL,
     tail_number VARCHAR(15) NOT NULL UNIQUE,
     CONSTRAINT fk_aircrafts_model FOREIGN KEY (model_id) REFERENCES airline.aircraft_models(model_id)
 );
 
-CREATE TABLE airline.seats (
+CREATE TABLE IF NOT EXISTS airline.seats (
     seat_id     INT         GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     aircraft_id INT         NOT NULL,
     seat_number VARCHAR(10) NOT NULL,
@@ -57,22 +57,22 @@ CREATE TABLE airline.seats (
     CONSTRAINT fk_seats_aircraft FOREIGN KEY (aircraft_id) REFERENCES airline.aircrafts(aircraft_id)
 );
 
-CREATE TABLE airline.economy_seats (
+CREATE TABLE IF NOT EXISTS airline.economy_seats (
     economy_id INT PRIMARY KEY,
     CONSTRAINT fk_economy_seats FOREIGN KEY (economy_id) REFERENCES airline.seats(seat_id)
 );
 
-CREATE TABLE airline.business_seats (
+CREATE TABLE IF NOT EXISTS airline.business_seats (
     business_id INT PRIMARY KEY,
     CONSTRAINT fk_business_seats FOREIGN KEY (business_id) REFERENCES airline.seats(seat_id)
 );
 
-CREATE TABLE airline.roles (
+CREATE TABLE IF NOT EXISTS airline.roles (
     role_id   SERIAL      PRIMARY KEY,
     role_name VARCHAR(30) NOT NULL UNIQUE
 );
 
-CREATE TABLE airline.employees (
+CREATE TABLE IF NOT EXISTS airline.employees (
     employee_id SERIAL       PRIMARY KEY,
     first_name  VARCHAR(50)  NOT NULL,
     last_name   VARCHAR(50)  NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE airline.employees (
     CONSTRAINT fk_employees_role FOREIGN KEY (role_id) REFERENCES airline.roles(role_id)
 );
 
-CREATE TABLE airline.flight_instances (
+CREATE TABLE IF NOT EXISTS airline.flight_instances (
     instance_id    SERIAL      PRIMARY KEY,
     flight_id      INT         NOT NULL,
     aircraft_id    INT         NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE airline.flight_instances (
     CONSTRAINT fk_flight_instances_aircraft FOREIGN KEY (aircraft_id) REFERENCES airline.aircrafts(aircraft_id)
 );
 
-CREATE TABLE airline.flight_crew (
+CREATE TABLE IF NOT EXISTS airline.flight_crew (
     instance_id     INT         NOT NULL,
     employee_id     INT         NOT NULL,
     assignment_role VARCHAR(30) NOT NULL,
@@ -106,7 +106,7 @@ CREATE TABLE airline.flight_crew (
     CONSTRAINT fk_flight_crew_employee FOREIGN KEY (employee_id) REFERENCES airline.employees(employee_id)
 );
 
-CREATE TABLE airline.passengers (
+CREATE TABLE IF NOT EXISTS airline.passengers (
     passenger_id INT          GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     first_name   VARCHAR(50)  NOT NULL,
     last_name    VARCHAR(50)  NOT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE airline.passengers (
     email        VARCHAR(100) NOT NULL UNIQUE
 );
 
-CREATE TABLE airline.bookings (
+CREATE TABLE IF NOT EXISTS airline.bookings (
     booking_id   SERIAL        PRIMARY KEY,
     passenger_id INT           NOT NULL,
     booking_date TIMESTAMPTZ   NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -123,7 +123,7 @@ CREATE TABLE airline.bookings (
     CONSTRAINT fk_bookings_passenger FOREIGN KEY (passenger_id) REFERENCES airline.passengers(passenger_id)
 );
 
-CREATE TABLE airline.tickets (
+CREATE TABLE IF NOT EXISTS airline.tickets (
     ticket_id   SERIAL        PRIMARY KEY,
     booking_id  INT           NOT NULL,
     instance_id INT           NOT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE airline.tickets (
     CONSTRAINT fk_tickets_instance FOREIGN KEY (instance_id) REFERENCES airline.flight_instances(instance_id)
 );
 
-CREATE TABLE airline.boarding_passes (
+CREATE TABLE IF NOT EXISTS airline.boarding_passes (
     pass_id   SERIAL PRIMARY KEY,
     ticket_id INT    NOT NULL UNIQUE,
     seat_id   INT    NOT NULL,
