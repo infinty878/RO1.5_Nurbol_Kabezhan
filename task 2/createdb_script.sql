@@ -1,4 +1,3 @@
-DROP SCHEMA IF EXISTS airline CASCADE;
 CREATE SCHEMA IF NOT EXISTS airline;
 SET search_path TO airline;
 
@@ -140,3 +139,83 @@ CREATE TABLE IF NOT EXISTS airline.boarding_passes (
     CONSTRAINT fk_boarding_passes_ticket FOREIGN KEY (ticket_id) REFERENCES airline.tickets(ticket_id),
     CONSTRAINT fk_boarding_passes_seat   FOREIGN KEY (seat_id)   REFERENCES airline.seats(seat_id)
 );
+
+
+INSERT INTO airline.country (country_name) VALUES 
+('Kazakhstan'),
+('USA'),
+('France');
+
+INSERT INTO airline.city (city_name) VALUES 
+('Almaty'),
+('Astana'),
+('New York'),
+('Paris');
+
+INSERT INTO airline.airports (iata_code, airport_name, city_id, country_id) VALUES 
+('ALA', 'Almaty International', 1, 1),
+('NQZ', 'Nursultan Nazarbayev International', 2, 1),
+('JFK', 'John F. Kennedy', 3, 2),
+('CDG', 'Charles de Gaulle', 4, 3);
+
+INSERT INTO airline.flights (flight_number, dep_airport_id, arr_airport_id) VALUES 
+('KC101', 1, 3), 
+('KC202', 2, 4);
+
+INSERT INTO airline.aircraft_models (manufacturer, model_name, capacity) VALUES 
+('Boeing', '787 Dreamliner', 250),
+('Airbus', 'A320neo', 180);
+
+INSERT INTO airline.aircrafts (model_id, tail_number) VALUES 
+(1, 'P4-KCA'),
+(2, 'P4-KCB');
+
+INSERT INTO airline.seats (aircraft_id, seat_number, seat_class) VALUES 
+(1, '1A', 'Business'),
+(1, '12B', 'Economy'),
+(2, '2A', 'Business'),
+(2, '15C', 'Economy');
+
+INSERT INTO airline.economy_seats (economy_id) VALUES 
+(2),
+(4);
+
+INSERT INTO airline.business_seats (business_id) VALUES 
+(1),
+(3);
+
+INSERT INTO airline.roles (role_name) VALUES 
+('Pilot'),
+('Co-Pilot'),
+('Flight Attendant');
+
+INSERT INTO airline.employees (first_name, last_name, role_id, number, email, iin) VALUES 
+('John', 'Doe', 1, 1001, 'john.doe@airline.com', 800101456789),
+('Jane', 'Smith', 2, 1002, 'jane.smith@airline.com', 900202123456),
+('Anna', 'Lee', 3, 1003, 'anna.lee@airline.com', 950303654321);
+
+INSERT INTO airline.flight_instances (flight_id, aircraft_id, departure_time, arrival_time, status) VALUES 
+(1, 1, '2026-06-01 10:00:00+00', '2026-06-01 22:00:00+00', 'Scheduled'),
+(2, 2, '2026-07-15 08:00:00+00', '2026-07-15 14:00:00+00', 'Scheduled');
+
+INSERT INTO airline.flight_crew (instance_id, employee_id, assignment_role) VALUES 
+(1, 1, 'Captain'),
+(1, 2, 'First Officer'),
+(1, 3, 'Senior Cabin Crew'),
+(2, 1, 'Captain');
+
+INSERT INTO airline.passengers (first_name, last_name, passport_num, email) VALUES 
+('Michael', 'Johnson', 'N12345678', 'michael.j@example.com'),
+('Emily', 'Davis', 'N87654321', 'emily.d@example.com');
+
+INSERT INTO airline.bookings (passenger_id, booking_date, amount) VALUES 
+(1, '2026-04-10 12:00:00+00', 1500.00),
+(2, '2026-04-12 14:30:00+00', 800.00);
+
+INSERT INTO airline.tickets (booking_id, instance_id, fare) VALUES 
+(1, 1, 1500.00),
+(2, 2, 800.00);
+
+INSERT INTO airline.boarding_passes (ticket_id, seat_id) VALUES 
+(1, 1),
+(2, 4);
